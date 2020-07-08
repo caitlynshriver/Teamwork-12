@@ -1,0 +1,52 @@
+<html>
+<head>
+
+    <title>Teamwork 12</title>
+
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyCjnAxtNmQCkmxkE6A8mtUI7TimlN0Zixg",
+          authDomain: "teamwork-12-936dd.firebaseapp.com",
+          databaseURL: "https://teamwork-12-936dd.firebaseio.com",
+          projectId: "teamwork-12-936dd",
+          storageBucket: "teamwork-12-936dd.appspot.com",
+          messagingSenderId: "479844050676",
+          appId: "1:479844050676:web:e884f9452520409b75a0a1",
+          measurementId: "G-NEXVDESTKT"
+        };
+        //Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+
+        </script> 
+        <script>
+	// Delete all data in database at root: images
+
+	path = '/'; 
+	firebase.database().ref(path).remove().then(()=>{ 
+		alert('Database has been emptied.'); 
+}); 
+</script> 
+
+</head>
+
+<body>
+
+<h1>PHOTO ALBUM</h1>
+
+<input type='button' value='HOME' onclick="history.go(-1)">
+
+<br><br>
+
+<span style='color:red; font-weight: bold; font-size: 15px;'>ALL IMAGES DELETED FROM ALBUM</span>
+
+</body>
+
+</html>

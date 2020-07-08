@@ -1,0 +1,157 @@
+<html>
+<head>
+    <title>TEAMWORK 12</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    
+    <script src='http://gobongo3.net/information/24165/TEAMWORK 12/exif.js'></script>
+    <script src='http://gobongo3.net/information/24165/TEAMWORK 12/image-processing.js'></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyCjnAxtNmQCkmxkE6A8mtUI7TimlN0Zixg",
+          authDomain: "teamwork-12-936dd.firebaseapp.com",
+          databaseURL: "https://teamwork-12-936dd.firebaseio.com",
+          projectId: "teamwork-12-936dd",
+          storageBucket: "teamwork-12-936dd.appspot.com",
+          messagingSenderId: "479844050676",
+          appId: "1:479844050676:web:e884f9452520409b75a0a1",
+          measurementId: "G-NEXVDESTKT"
+        };
+        //Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+        
+        function save() {
+
+    /*
+
+        The function below, handleFiles(this), gets the image you select and puts data about the image in 'results' -- look at HTML at bottom of page.
+
+        The content of 'results' includes:
+
+            a. a button that reads ADD TO ALBUM. When it is clicked this function save() is called.
+
+            b. 7 hidden <span> that contain data about the image. Get the 7 data values. The data is in each <span>'s innerHTML
+
+               The 7 <span> ids are:
+
+                    imageName 
+                    dateTime
+                    imageHeight
+                    imageWidth
+                    longitude
+                    latitude
+                    imageBase64
+
+        Do this with the 7 values:
+
+            a. Fix imageName as shown in this example:
+
+                If imageName received is IMG_3947.jpg turn it into IMG_3947
+
+                Think about splitting imageName using ('.')
+
+            b. Add a new variable displayTitle and assign it the value imageName 
+
+            c. Make a path /images/'+imageName+'/    and store these 8 value names at that path:
+
+                    dateTime
+                    displayTitle
+                    imageHeight
+                    imageWidth
+                    longitude
+                    latitude
+                    imageBase64
+                    PDF      <=== REMEMBER: You need to create this BEFORE use as PDF = 'Y'
+    */
+                    imageName = document.getElementById('imageName').innerHTML;
+                    dateTime = document.getElementById('dateTime').innerHTML;
+                    imageHeight = document.getElementById('imageHeight').innerHTML;
+                    imageWidth = document.getElementById('imageWidth').innerHTML;
+                    longitude = document.getElementById('longitude').innerHTML;
+                    latitude = document.getElementById('latitude').innerHTML;
+                    imageBase64 = document.getElementById('imageBase64').innerHTML;
+
+                    console.log(imageName)
+
+   
+
+                    
+                    
+
+    // Fix imageName so only the part before "." is used.
+
+    //*** CREATE PATH ***
+
+    var res = imageName.split(".");
+    var fileName = res[0];
+    console.log(res);
+    console.log(fileName);
+    imageName = fileName;
+
+
+    displayTitle = imageName;
+
+    path = '/images/'+imageName+'/';
+
+    firebase.database().ref(path).set({
+
+        dateTime: dateTime,
+        imageHeight: imageHeight,
+        imageWidth: imageWidth,
+        longitude: longitude,
+        latitude: latitude,
+        imageBase64: imageBase64,
+        displayTitle: displayTitle,
+        PDF: 'Y'
+
+        //*** PUT THE CORRECT CODE HERE FOR 7 VALUES TO BE STORED ***
+
+        /*
+
+            Store 9 values. 6 values you got from 'result'. 
+
+            The 7th is imageName which is used to make the path.
+
+            The 8th, displayTitle, uses the variable: imageName
+
+            The 9th, PDF, uses the value 'Y' <== Do not forget the quotes; this is a character value.
+
+
+        */
+
+    }).then(()=>{
+
+      document.getElementById('result').innerHTML += "<br><br><span style='color: black; font-weight: bold; font-size: 15px;'>" + imageName + " ADDED TO ALBUM</span>";
+
+    });
+
+
+};
+
+
+</script>
+
+</head>
+
+<body>
+<h1>PHOTO ALBUM</h1>
+
+<input type = 'button' value = 'HOME' onclick='history.go(-1)'> 
+
+Select image to add to album <input type="file" id="input" onchange="handleFiles(this)"  accept=".jpg,.jpeg,.png,.gif"/> 
+
+<br><br>
+
+<div id = 'result'>
+
+</div>
+
+</body>
+
+</html>

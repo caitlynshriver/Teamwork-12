@@ -1,0 +1,145 @@
+<html>
+<head>
+
+  <title>Teamwork 12</title>
+
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <script src="http://gobongo3.net/information/24165/TEAMWORK 12/jspdf.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyCjnAxtNmQCkmxkE6A8mtUI7TimlN0Zixg",
+          authDomain: "teamwork-12-936dd.firebaseapp.com",
+          databaseURL: "https://teamwork-12-936dd.firebaseio.com",
+          projectId: "teamwork-12-936dd",
+          storageBucket: "teamwork-12-936dd.appspot.com",
+          messagingSenderId: "479844050676",
+          appId: "1:479844050676:web:e884f9452520409b75a0a1",
+          measurementId: "G-NEXVDESTKT"
+        };
+        //Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+      </script>
+
+      <script>
+
+        var doc = new jsPDF();
+
+        doc.setFont("arial");
+
+        doc.setTextColor(0,0,255);
+
+        doc.setFontSize(50);
+
+        doc.text("MY PHOTO ALBUM", 20, 80);
+
+        doc.setTextColor(0,0,0);
+
+        
+
+        //*** MAKE path TO images
+        path = '/images/'
+
+        firebase.database().ref(path).once('value', function(snapshot) {
+
+          count = 0;
+
+          content = '';
+
+          snapshot.forEach(function(childSnapshot) {
+
+              var obj = childSnapshot.val();
+
+              /*
+
+                  Get these variables from obj
+
+                  dateTime
+                  displayTitle
+                  imageBase64
+                  imageHeight
+                  imageWidth
+                  PDF
+
+              */
+              dateTime = obj.dateTime;
+              displayTitle = obj.displayTitle;
+              imageHeight = obj.imageHeight;
+              imageWidth = obj.imageWidth;
+              imageBase64 = obj.imageBase64;
+              PDF = obj.PDF;
+
+              //*** IF PDF is 'Y' RUN THESE LINESS OF CODE - THESE ARE THE IMAGES SELECTED TO BE IN PDF
+
+              if (PDF == 'Y') {
+
+                  count++;
+
+                  imageAspectRatio = imageWidth / imageHeight;
+
+                  displayImageWidthInPDF = 190 - 10;
+
+                  displayHeightInPDF = displayImageWidthInPDF / imageAspectRatio;
+
+                  doc.addPage();
+
+                  doc.setFontSize(20);
+
+                  doc.text(displayTitle.toUpperCase(), 10, 10);
+
+                  doc.addImage(imageBase64, "JPEG", 10, 15, 190, displayHeightInPDF);
+
+                  doc.setFontSize(10);
+
+                  doc.text("DATE / TIME " + dateTime, 10, displayHeightInPDF + 20);
+              };
+          });
+
+          //alert(content);
+
+          //*** IF count is 0 RUN THESE 4 LINES OF CODE
+          if (count == 0) {
+
+              document.getElementById('result').innerHTML = "<h1>PHOTO ALBUM</h1>";
+
+              document.getElementById('result').innerHTML += "<input type = 'button' value = 'HOME' onclick='history.go(-1)'> <br><br>";
+
+              document.getElementById('result').innerHTML += "<span style='color: red; font-weight: bold;'>NO IMAGES SELECTED FOR PDF</span>";
+
+              return;
+
+          };
+          
+          doc.save('MY_PHOTOS.pdf');
+
+          history.go(-1);
+
+
+        });
+
+
+      </script>
+
+  </head>
+
+    <div id = 'result'>
+
+  <body>
+
+  </body>
+
+</html>
+
+
+
+
+
+
+
+

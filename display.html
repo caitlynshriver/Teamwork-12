@@ -1,0 +1,236 @@
+<html>
+<head>
+
+  <title>TEAMWORK 12</title>
+
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-analytics.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyCjnAxtNmQCkmxkE6A8mtUI7TimlN0Zixg",
+          authDomain: "teamwork-12-936dd.firebaseapp.com",
+          databaseURL: "https://teamwork-12-936dd.firebaseio.com",
+          projectId: "teamwork-12-936dd",
+          storageBucket: "teamwork-12-936dd.appspot.com",
+          messagingSenderId: "479844050676",
+          appId: "1:479844050676:web:e884f9452520409b75a0a1",
+          measurementId: "G-NEXVDESTKT"
+        };
+        //Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+      </script>
+
+      <!-- KEEP THESE <script> sections separate. -->
+
+      <script>
+
+        function deleteImage(image) {
+
+            //*** BUILD PATH TO image ***
+            path = '/images/'+image+'/';
+            // path is /images/image/ -- remember image is a variable, so you need quotes around it just as you did when you added the image.
+
+            //alert(path);
+
+            //*** REMOVE THE PATH -- YOU HAVE USED remove() MANY TIMES ***
+
+            // INSIDE firebase...remove().then(()=>{ *** ADD THIS ==> location.reload();
+              firebase.database().ref(path).remove().then(()=>{ 
+                location.reload();
+              }); 
+        }
+
+
+        function changeTitle(image) {
+
+            /*
+
+              When you added the image the value for displayTitle was the imageName (lok at your code if you do not recall).
+
+              Here you allow the value of displayTitle to be changed.
+
+            */
+
+            displayTitle = prompt('Enter a new title for ' +image)
+
+            //alert(displayTtile);
+
+            // If no title given or CANCEL clicked leave changeTitle()
+
+            if ((displayTitle == '') || (displayTitle == null)) {
+
+                return;
+
+            };
+
+            //*** BUILD PATH TO IMAGE ***
+            path = '/images/'+image+'/';
+
+            // Notice use of update() to change 1 value only at path
+
+            firebase.database().ref(path).update({
+
+                displayTitle: displayTitle
+
+            }).then(()=>{
+
+                // Re-display the album.
+
+                location.reload();
+
+            });
+
+        }
+
+
+        function changePDF(image,PDF) {
+
+            //*** BUILD PATH TO image ***
+            path = '/images/'+image+'/';
+
+
+            //alert("I made it to changePDF!");
+
+            if (PDF == 'Y') {
+
+                PDF = 'N';
+
+            } else {
+
+                PDF = 'Y';
+
+            }
+
+            // *** AT PATH UPDATE IMAGES'S VALUE FOR PDF THEN RELOAD PAGE ==> SEE changeTitle(image) FOR HOW TO DO THIS
+            firebase.database().ref(path).update({
+
+              PDF: PDF
+
+             }).then(()=>{
+
+                // Re-display the album.
+
+                location.reload();
+
+          });
+
+        }
+
+
+
+         // MAKE THE PATH
+
+        //*** BUILD PATH TO images ***
+        path = '/images/';
+        //alert(path);
+
+
+        firebase.database().ref(path).once('value', function(snapshot) {
+       
+          count = 0;
+
+          content = '';
+
+          snapshot.forEach(function(childSnapshot) {
+
+              var key = childSnapshot.key;
+
+              image = key;
+
+              var obj = childSnapshot.val();
+
+              //*** GET ALL IMAGE VARIABLES FROM obj
+              
+              dateTime = obj.dateTime;
+              displayTitle = obj.displayTitle;
+              imageHeight = obj.imageHeight;
+              imageWidth = obj.imageWidth;
+              longitude = obj.longitude;
+              latitude = obj.latitude;
+              imageBase64 = obj.imageBase64;
+              PDF = obj.PDF;
+              
+              count++;
+
+              content += "<h2>" + displayTitle.toUpperCase() + "</h2>";
+
+              content += '<img src=' + imageBase64 + ' height=200>';
+
+              content += '<br><br>';
+
+              content += 'Date: ' + dateTime;
+
+              content += '<br><br>';
+
+              content += 'Include in PDF: ' + PDF ;
+
+              content += " <span class = \"change\" onclick=\"changePDF('" + image + "',PDF)\">Change</span>";
+
+              content += '<br><br>';
+
+              url = 'https://www.google.com/maps?q=' + latitude + ',' + longitude;
+
+              //alert(url);
+
+              if ((latitude != 0) && (longitude != 0)) {
+
+                  content += "<a href='" + url + "' target='map'>Locate in Google Maps</a>";
+
+              } else {
+
+                  content += "Cannot be mapped";
+
+              };
+
+              content += '<br><br>';
+
+              content += "<span class = \"del\" onclick=\"deleteImage('" + image + "')\">Delete</span>";
+
+              content += '&nbsp;&nbsp;&nbsp;';
+              
+              content += "<span class = \"change\" onclick=\"changeTitle('" + image + "')\">Change title</span>";
+
+              content += '<br><br>';
+
+          });
+
+          //alert(content);
+
+          if (count == 0) {
+
+               document.getElementById('result').innerHTML = "<span style='color: red;'>NO IMAGES IN ALBUM</span>";
+
+               return;
+
+          };
+
+          //*** LOAD content IN innerHTML FOR OBJECT WITH id = 'result'
+          document.getElementById('result').innerHTML = content;
+
+          
+        });
+      
+
+      </script>
+
+  </head>
+
+  <body>
+
+    <h1>PHOTO ALBUM</h1>
+
+    <input type='button' value='HOME' onclick="history.go(-1)">
+
+    <br><br>
+
+    <span id='result' style='font-weight:bold;'>Waiting ...</span>
+
+  </body>
+
+</html>

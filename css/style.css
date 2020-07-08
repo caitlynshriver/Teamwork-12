@@ -1,0 +1,22 @@
+body {
+	font-family: arial;
+}
+
+h2 {
+	color: green;
+}
+
+a {
+	color: blue;
+	text-decoration: none;
+}
+
+.del {
+	color: red;
+	cursor: pointer;
+}
+
+.change {
+	color: blue;
+	cursor: pointer;
+}
